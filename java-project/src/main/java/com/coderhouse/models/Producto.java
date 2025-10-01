@@ -3,18 +3,28 @@ package com.coderhouse.models;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 @Entity
-@Table(name = "productos")
+@Table(name = "Productos")
 public class Producto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_producto")
-    private Long idProducto;
+    @Column(name = "id")
+    private Long id;
 
     @Column(name = "nombre", nullable = false)
     private String nombre;
@@ -25,40 +35,19 @@ public class Producto {
     @Column(name = "stock", nullable = false)
     private Integer stock;
 
-    @ManyToMany(mappedBy = "productos", fetch = FetchType.LAZY)
-    @JsonBackReference
+    // Relación ManyToMany con Cliente (lado propietario)
+    @ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(
+			name = "producto_cliente", 
+			joinColumns = @JoinColumn(name = "producto_id"), 
+			inverseJoinColumns = @JoinColumn(name = "cliente_id"))
+    @JsonIgnore
     private List<Cliente> clientes = new ArrayList<>();
 
-    public Producto() {
-    	super();
-    }
+
+    // Relación ManyToOne con Categoria
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Categoria categoria;
+
     
-    public Producto(String nombre, Double precio, Integer stock) {
-        this.nombre = nombre;
-        this.precio = precio;
-        this.stock = stock;
-    }
-
-
-    // Getters y setters
-    public Long getIdProducto() { return idProducto; }
-    public void setIdProducto(Long idProducto) { this.idProducto = idProducto; }
-
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
-
-    public Double getPrecio() { return precio; }
-    public void setPrecio(Double precio) { this.precio = precio; }
-
-    public Integer getStock() { return stock; }
-    public void setStock(Integer stock) { this.stock = stock; }
-
-    public List<Cliente> getClientes() { return clientes; }
-    public void setClientes(List<Cliente> clientes) { this.clientes = clientes; }
-
-    @Override
-    public String toString() {
-        return "Producto [idProducto=" + idProducto + ", nombre=" + nombre +
-                ", precio=" + precio + ", stock=" + stock + "]";
-    }
 }
