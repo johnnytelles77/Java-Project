@@ -38,3 +38,17 @@ El objetivo principal del proyecto fue aprender sobre **arquitectura REST**, **e
 ```bash
 git clone https://github.com/tu-usuario/java-project.git
 cd java-project
+
+
+## 🗄️ Scripts de Base de Datos (MySQL)
+
+Antes de ejecutar la API, asegúrate de crear la base de datos y verificar las tablas:
+
+```sql
+CREATE DATABASE IF NOT EXISTS coderhouse;
+USE coderhouse;
+
+SELECT * FROM CLIENTES;
+SELECT * FROM PRODUCTOS;
+SELECT * FROM CATEGORIAS;
+SELECT * FROM producto_cliente;
