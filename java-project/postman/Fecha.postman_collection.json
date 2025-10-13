@@ -1,0 +1,31 @@
+{
+	"info": {
+		"_postman_id": "6195bcab-01a8-4ab4-93bf-848e3f4af696",
+		"name": "Fecha",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34313444",
+		"_collection_link": "https://galactic-robot-981470.postman.co/workspace/Java~39067766-4af3-426d-aa09-2d07c24db12c/collection/34313444-6195bcab-01a8-4ab4-93bf-848e3f4af696?action=share&source=collection_link&creator=34313444"
+	},
+	"item": [
+		{
+			"name": "Get Fecha",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/fecha",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"fecha"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -18,23 +18,57 @@ import com.coderhouse.dtos.VentasDTO;
 import com.coderhouse.models.Cliente;
 import com.coderhouse.services.ClienteService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/clientes")
+@Tag(name = "Gestion de Clientes", description = "Endpoints para gestionar Clientes")
 public class ClienteController {
 
 	@Autowired
 	private ClienteService clienteService;
 
+	
+	@Operation(summary = "Obtener Lista de Clientes")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Lista de Clientes Obtenida Correctamente",
+					content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = Cliente.class))
+					}),
+			@ApiResponse(responseCode = "404", description = "Error al Obtener los Clientes", 
+			content = @Content),
+			@ApiResponse(responseCode = "500", description = "Error Interno del Servidor", 
+			content = @Content),
+	})
 	@GetMapping
 	public ResponseEntity<List<Cliente>> getAllClientes() {
 		try {
 			List<Cliente> clientes = clienteService.getAllClientes();
 			return ResponseEntity.ok(clientes); //200
+		}catch(IllegalArgumentException e) {
+			return ResponseEntity.notFound().build(); // 404
 		}catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); //500
 		}
 	}
 
+	
+	@Operation(summary = "Obtener un Cliente por su ID")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Cliente Obtenido Correctamente",
+					content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = Cliente.class))
+					}),
+			@ApiResponse(responseCode = "404", description = "Error al Obtener el Cliente", 
+			content = @Content),
+			@ApiResponse(responseCode = "500", description = "Error Interno del Servidor", 
+			content = @Content),
+	})
 	@GetMapping("/{id}")
 	public ResponseEntity<Cliente> getClienteById(@PathVariable Long id) {
 		try {
@@ -47,6 +81,18 @@ public class ClienteController {
 		}
 	}
 
+	
+	@Operation(summary = "Crear Cliente")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "201", description = "Cliente Creado Correctamente",
+					content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = Cliente.class))
+					}),
+			@ApiResponse(responseCode = "400", description = "Error al Intentar Crear el Cliente", 
+			content = @Content),
+			@ApiResponse(responseCode = "500", description = "Error Interno del Servidor", 
+			content = @Content),
+	})
 	@PostMapping
 	public ResponseEntity<Cliente> createCliente(@RequestBody Cliente cliente) {
 		try {
@@ -58,6 +104,17 @@ public class ClienteController {
 	}
 	
 
+	@Operation(summary = "Modificar Cliente por su ID")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "201", description = "Cliente Modificado Correctamente",
+					content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = Cliente.class))
+					}),
+			@ApiResponse(responseCode = "404", description = "Error al Intentar Modificar el Cliente", 
+			content = @Content),
+			@ApiResponse(responseCode = "500", description = "Error Interno del Servidor", 
+			content = @Content),
+	})
 	@PutMapping("/{id}")
 	public ResponseEntity<Cliente> updateClienteById(@PathVariable Long id, @RequestBody Cliente clienteModificado){
 		try {
@@ -70,6 +127,18 @@ public class ClienteController {
 		}
 	}
 	
+	
+	@Operation(summary = "Eliminar Cliente por su ID")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "204", description = "Cliente Eliminado Correctamente",
+					content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = Cliente.class))
+					}),
+			@ApiResponse(responseCode = "404", description = "Error al Intentar Eliminar el Cliente", 
+			content = @Content),
+			@ApiResponse(responseCode = "500", description = "Error Interno del Servidor", 
+			content = @Content),
+	})
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteClienteById(@PathVariable Long id){
 		try {
@@ -83,11 +152,23 @@ public class ClienteController {
 		}
 	}
 	
+	
+	@Operation(summary = "Vender Producto a Cliente")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Venta Procesada Correctamente",
+					content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = Cliente.class))
+					}),
+			@ApiResponse(responseCode = "404", description = "Error al Intentar Procesar Venta", 
+			content = @Content),
+			@ApiResponse(responseCode = "500", description = "Error Interno del Servidor", 
+			content = @Content),
+	})
 	@PostMapping("/vender")
 	public ResponseEntity<Cliente> venderProductoACliente(@RequestBody VentasDTO dto){
 		try {
 			Cliente cliente = clienteService.venderProductoACliente(dto);
-			return ResponseEntity.ok(cliente);
+			return ResponseEntity.ok(cliente);//200
 			
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.badRequest().build(); // 400

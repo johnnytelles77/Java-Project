@@ -17,23 +17,56 @@ import org.springframework.web.bind.annotation.RestController;
 import com.coderhouse.models.Categoria;
 import com.coderhouse.services.CategoriaService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/categorias")
+@Tag(name = "Gestion de Categorias", description = "Endpoints para gestionar Categorias")
 public class CategoriaController {
 
 	@Autowired
 	private CategoriaService categoriaService;
 
+	@Operation(summary = "Obtener Lista de Categorias")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Lista de Categorias Obtenida Correctamente",
+					content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = Categoria.class))
+					}),
+			@ApiResponse(responseCode = "404", description = "Error al Intentar Obtener Categorias", 
+			content = @Content),
+			@ApiResponse(responseCode = "500", description = "Error Interno del Servidor", 
+			content = @Content),
+	})
 	@GetMapping
 	public ResponseEntity<List<Categoria>> getAllCategorias() {
 		try {
 			List<Categoria> categorias = categoriaService.findAll();
 			return ResponseEntity.ok(categorias);
+		}catch(IllegalArgumentException e) {
+			return ResponseEntity.notFound().build(); // 404
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 
+	
+	@Operation(summary = "Obtener Categoria por su ID")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Categoria Obtenida Correctamente",
+					content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = Categoria.class))
+					}),
+			@ApiResponse(responseCode = "404", description = "Error al Intentar Obtener Categoria", 
+			content = @Content),
+			@ApiResponse(responseCode = "500", description = "Error Interno del Servidor", 
+			content = @Content),
+	})
 	@GetMapping("/{id}")
 	public ResponseEntity<Categoria> getCategoriaById(@PathVariable long id) {
 		try {
@@ -46,6 +79,18 @@ public class CategoriaController {
 		}
 	}
 
+	
+	@Operation(summary = "Crear Categoria")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Categoria Creada Correctamente",
+					content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = Categoria.class))
+					}),
+			@ApiResponse(responseCode = "404", description = "Error al Intentar Crear Categoria", 
+			content = @Content),
+			@ApiResponse(responseCode = "500", description = "Error Interno del Servidor", 
+			content = @Content),
+	})
 	@PostMapping
 	public ResponseEntity<Categoria> createCategoria(@RequestBody Categoria categoria) {
 		try {
@@ -56,6 +101,18 @@ public class CategoriaController {
 		}
 	}
 
+	
+	@Operation(summary = "Modificar Categoria por su ID")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Categoria Modificada Correctamente",
+					content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = Categoria.class))
+					}),
+			@ApiResponse(responseCode = "404", description = "Error al Intentar Modificar Categoria", 
+			content = @Content),
+			@ApiResponse(responseCode = "500", description = "Error Interno del Servidor", 
+			content = @Content),
+	})
 	@PutMapping("/{id}")
 	public ResponseEntity<Categoria> updateCategoria(@PathVariable Long id, @RequestBody Categoria categoriaDetails) {
 		try {
@@ -67,6 +124,17 @@ public class CategoriaController {
 		}
 	}
 
+	@Operation(summary = "Eliminar Categoria")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "201", description = "Categoria Eliminada Correctamente",
+					content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = Categoria.class))
+					}),
+			@ApiResponse(responseCode = "404", description = "Error al Intentar Eliminar Categoria", 
+			content = @Content),
+			@ApiResponse(responseCode = "500", description = "Error Interno del Servidor", 
+			content = @Content),
+	})
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteCategoria(@PathVariable Long id) {
 		try {
